@@ -19,7 +19,7 @@ sudo docker build -t sshd:1 .
 
 1. 启动容器：
 <pre>
-CID=$(sudo docker run -d -p 1234:22 --name app.sshd sshd)
+CID=$(sudo docker run -d -p 1234:22 --privileged --name app.sshd sshd)
 </pre>
 2. 获取登录密码：
 <pre>
