@@ -1,2 +1,6 @@
 .git
 .gitignore
+conf
+html
+README.md
+.lock_source
