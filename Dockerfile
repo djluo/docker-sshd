@@ -1,18 +1,23 @@
 # SSHD
 #
-# Version 3
+# Version 4
 
-FROM centos
+FROM debian
 MAINTAINER djluo <dj.luo@baoyugame.com>
 
-RUN rpm --import /etc/pki/rpm-gpg/RPM*
-RUN yum install -y openssh-server initscripts; yum clean all
+RUN apt-get update \
+    && apt-get install -y openssh-server \
+    && apt-get clean \
+    && rm -rf usr/share/locale \
+    && rm -rf usr/share/man    \
+    && rm -rf usr/share/doc    \
+    && rm -rf usr/share/info   \
+    && find var/lib/apt -type f -exec rm -fv {} \; \
+    && rm -f /etc/motd
 
-RUN /usr/sbin/sshd-keygen
-
-ADD ./start.sh /start.sh
-RUN chmod +x /start.sh
+ADD ./cmd.sh /cmd.sh
+ADD ./sshd_config /etc/ssh/
 
 EXPOSE 22
 
-CMD ["/start.sh"]
+CMD ["/cmd.sh"]
