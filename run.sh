@@ -18,9 +18,14 @@ app_name="$2"  # is container name
 app_port="$3"  # master port
 
 app_name=${app_name:=ssh-server}
-app_port=${app_port:=127.0.0.1:3555}
+app_port=${app_port:=3555}
 
-port="-p $app_port:22"
+port="-p 127.0.0.1:$app_port:22"
+
+# 简单的判断端口参数是否带IP地址
+if [ ${#app_port} -gt 5 ];then
+  port="-p $app_port:22"
+fi
 
 # 读取当前应用配置
 [ -f  ${current_dir}/.lock_source ] && source ${current_dir}/.lock_source
@@ -103,7 +108,7 @@ _run() {
   [ -f ${current_dir}/conf/authorized_keys ] && \
     volume="-v ${current_dir}/conf/authorized_keys:/home/docker/.ssh/authorized_keys"
 
-  local User_Id="$app_port"
+  local User_Id="${app_port/*:/}"
   if `id -u baoyu >/dev/null 2>&1` ;then
     User_Id=`id -u baoyu`
   fi
